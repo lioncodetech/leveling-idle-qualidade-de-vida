@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Leveling Idle - qualidade de vida",
+  "version": "0.2.3",
+  "description": "Painel leve e automações seguras para caçadas, poções, mochila, party, rotinas e fadiga.",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://levelingidle2d.com.br/*"],
+      "js": ["leveling.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
