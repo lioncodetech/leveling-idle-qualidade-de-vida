@@ -21,6 +21,6 @@ Extensão de qualidade de vida para `https://levelingidle2d.com.br/`.
 - poções por percentual, mochila/depósito e preparação de venda;
 - monitor da party, diária, eventos, guerra de time e fadiga;
 - pausa geral, registro das ações e bloqueio de botões premium;
-- exportação e importação das configurações.
+- exportação e importação das configurações em arquivo, para levar a outra janela; entre classes diferentes, a build de status e os pesos do equipamento não vêm.
 
 O pacote não troca personagem. A confirmação da venda permanece manual para impedir perda acidental. Automações que alteram o jogo começam desligadas.
