@@ -13,6 +13,7 @@ Extensão de qualidade de vida para `https://levelingidle2d.com.br/`.
 - `Alt+Q` mostra ou esconde o painel.
 - `Alt+G` desliga os gráficos (liga o modo leve sem animações e sem cenário) e `Alt+H` liga de novo; o HUD e o combate continuam.
 - distribuição automática dos pontos de status: escolha uma das 3 builds da classe que o jogo oferece ou monte a sua com um peso para cada atributo; sempre que houver pontos livres, a extensão abre a janela de Status, distribui, confirma e fecha a janela;
+- equipar os melhores automaticamente pelo botão "Equipar melhores" do jogo, ao subir de nível e a cada 10 minutos;
 - build de talentos: uma lista em ordem de talentos e o nível de cada um; sempre que houver pontos de talento, a extensão abre a árvore, aprende na ordem e fecha a janela, pulando o que ainda estiver bloqueado;
 - escada de caçadas por marco de nível, mantendo a caça atual sem opção segura;
 - poções por percentual, mochila/depósito e preparação de venda;
