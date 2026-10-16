@@ -11,6 +11,7 @@ Extensão de qualidade de vida para `https://levelingidle2d.com.br/`.
 - intervalo configurável para a atualização do painel;
 - posição, visibilidade e configurações guardadas por conta;
 - `Alt+Q` mostra ou esconde o painel.
+- `Alt+G` desliga os gráficos (liga o modo leve sem animações e sem cenário) e `Alt+H` liga de novo; o HUD e o combate continuam.
 - escada de caçadas por marco de nível, mantendo a caça atual sem opção segura;
 - poções por percentual, mochila/depósito e preparação de venda;
 - monitor da party, diária, eventos, guerra de time e fadiga;
