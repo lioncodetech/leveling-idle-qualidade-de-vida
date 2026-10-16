@@ -16,6 +16,7 @@ Extensão de qualidade de vida para `https://levelingidle2d.com.br/`.
 - aba Equipamento: equipar os melhores pelo botão "Equipar melhores" do jogo a cada N minutos, uma vez por dia num horário ou uma vez por semana num dia e horário, e opcionalmente ao subir de nível;
 - build de talentos: uma lista em ordem de talentos e o nível de cada um; sempre que houver pontos de talento, a extensão abre a árvore, aprende na ordem e fecha a janela, pulando o que ainda estiver bloqueado;
 - escada de caçadas por marco de nível, mantendo a caça atual sem opção segura;
+- compra de poções no NPC da cidade: grava o caminho até ele uma vez e, quando a poção acaba ou a cada N minutos, volta à cidade, refaz o caminho, completa cada item até a quantidade escolhida só com ouro e fecha a loja;
 - poções por percentual, mochila/depósito e preparação de venda;
 - monitor da party, diária, eventos, guerra de time e fadiga;
 - pausa geral, registro das ações e bloqueio de botões premium;
