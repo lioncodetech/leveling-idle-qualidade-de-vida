@@ -12,6 +12,7 @@ Extensão de qualidade de vida para `https://levelingidle2d.com.br/`.
 - posição, visibilidade e configurações guardadas por conta;
 - `Alt+Q` mostra ou esconde o painel.
 - `Alt+G` desliga os gráficos (liga o modo leve sem animações e sem cenário) e `Alt+H` liga de novo; o HUD e o combate continuam.
+- distribuição automática dos pontos de status: escolha uma das 3 builds da classe que o jogo oferece ou monte a sua com um peso para cada atributo; sempre que houver pontos livres, a extensão abre a janela de Status, distribui, confirma e fecha;
 - escada de caçadas por marco de nível, mantendo a caça atual sem opção segura;
 - poções por percentual, mochila/depósito e preparação de venda;
 - monitor da party, diária, eventos, guerra de time e fadiga;
