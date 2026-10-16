@@ -15,8 +15,9 @@ Extensão de qualidade de vida para `https://levelingidle2d.com.br/`.
 - distribuição automática dos pontos de status: escolha uma das 3 builds da classe que o jogo oferece ou monte a sua com um peso para cada atributo; sempre que houver pontos livres, a extensão abre a janela de Status, distribui, confirma e fecha a janela;
 - aba Equipamento: equipar os melhores pelo poder (botão "Equipar melhores" do jogo) ou pelos seus atributos preferidos, com peso e "exigir" para cada atributo das peças, a cada N minutos, uma vez por dia num horário ou uma vez por semana num dia e horário, e opcionalmente ao subir de nível;
 - build de talentos: uma lista em ordem de talentos e o nível de cada um; sempre que houver pontos de talento, a extensão abre a árvore, aprende na ordem e fecha a janela, pulando o que ainda estiver bloqueado;
-- escada de caçadas por marco de nível, mantendo a caça atual sem opção segura;
+- escada de caçadas por marco de nível, lendo todas as páginas e dificuldades da lista, mantendo a caça atual sem opção segura;
 - compra de poções no NPC da cidade: grava o caminho até ele uma vez e, quando a poção acaba ou a cada N minutos, volta à cidade, refaz o caminho, completa cada item até a quantidade escolhida só com ouro, nas abas Consumíveis e Essências (nunca na de diamantes), e fecha a loja;
+- venda de equipamento ao Brok na ida ao NPC ou com a mochila cheia, até a raridade escolhida, nunca materiais nem peças travadas;
 - poções por percentual, mochila/depósito e preparação de venda;
 - monitor da party, diária, eventos, guerra de time e fadiga;
 - pausa geral, registro das ações e bloqueio de botões premium;
