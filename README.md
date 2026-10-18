@@ -29,6 +29,11 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
 - compra de poções no NPC da cidade: grava o caminho até ele uma vez e, quando a poção acaba ou a cada N minutos, volta à cidade, refaz o caminho, completa cada item até a quantidade escolhida só com ouro, nas abas Consumíveis e Essências (nunca na de diamantes), e fecha a loja;
 - venda de equipamento ao Brok na ida ao NPC ou com a mochila cheia, até a raridade escolhida, nunca materiais nem peças travadas;
 - poções por percentual, mochila/depósito e preparação de venda;
+- reviver sozinho ao cair na caçada: escolha o Reviver mais barato que houver, o melhor, ou um
+  fixo, com teto de quantos por hora. Reviver **gasta um item da mochila** — por isso a opção
+  começa desligada, nunca troca de item por conta própria quando o escolhido acaba e, alcançado o
+  teto, deixa a contagem de 10 segundos correr e o jogo levar você para Seul, que é o que já
+  acontecia. O XP perdido na queda é da morte e nenhum Reviver desfaz;
 - monitor da party, diária, eventos, guerra de time e fadiga;
 - pausa geral, registro das ações e bloqueio de botões premium;
 - exportação e importação das configurações em arquivo, para levar a outra janela; entre classes diferentes, a build de status e os pesos do equipamento não vêm.
