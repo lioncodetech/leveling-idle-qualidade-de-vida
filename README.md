@@ -2,6 +2,10 @@
 
 Extensão de qualidade de vida para `https://levelingidle2d.com.br/`.
 
+Na 0.14.0, a extensão ganhou fila do Codex, missões, chefe diário, Torre Infinita, Forja com
+reservas e organização segura do time e dos equipamentos das sombras. A diária continua lembrando
+o resgate pelo dia de Brasília para não reabrir a janela até a próxima virada.
+
 ## Recursos
 
 - painel resumido com personagem, HP, mana, XP, alvo, mochila, dano da party e ping;
@@ -16,6 +20,12 @@ Extensão de qualidade de vida para `https://levelingidle2d.com.br/`.
 - aba Equipamento: equipar os melhores pelo poder (botão "Equipar melhores" do jogo) ou pelos seus atributos preferidos, com peso e "exigir" para cada atributo das peças, a cada N minutos, uma vez por dia num horário ou uma vez por semana num dia e horário, e opcionalmente ao subir de nível;
 - build de talentos: uma lista em ordem de talentos e o nível de cada um; sempre que houver pontos de talento, a extensão abre a árvore, aprende na ordem e fecha a janela, pulando o que ainda estiver bloqueado;
 - escada de caçadas por marco de nível, lendo todas as páginas e dificuldades da lista, mantendo a caça atual sem opção segura;
+- modo Codex separado por Monstros, Loots, Equipamentos e Aprimoramento, priorizando o próximo marco incompleto;
+- aceita missões disponíveis e resgata automaticamente as recompensas concluídas, sem abandonar ou trocar missões;
+- relê os botões das árvores de talentos após cada troca, incluindo abas posteriores como Ambição;
+- agenda o chefe diário por rank e a Torre Infinita por margem de poder, usando o avanço e a condição de parada do próprio jogo;
+- explica no painel que o descanso é offline e mantém reservas pagas do Hotel sob controle manual;
+- roda várias abas do Codex em fila, encanta somente peças vestidas até o limite e as reservas escolhidas, e organiza time/equipamentos das sombras sem liberar ou fundir nenhuma;
 - compra de poções no NPC da cidade: grava o caminho até ele uma vez e, quando a poção acaba ou a cada N minutos, volta à cidade, refaz o caminho, completa cada item até a quantidade escolhida só com ouro, nas abas Consumíveis e Essências (nunca na de diamantes), e fecha a loja;
 - venda de equipamento ao Brok na ida ao NPC ou com a mochila cheia, até a raridade escolhida, nunca materiais nem peças travadas;
 - poções por percentual, mochila/depósito e preparação de venda;
