@@ -24,6 +24,12 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
 - escada de caçadas por marco de nível, lendo todas as páginas e dificuldades da lista, mantendo a caça atual sem opção segura;
 - modo Codex separado por Monstros, Loots, Equipamentos e Aprimoramento, priorizando o próximo marco incompleto;
 - aceita missões disponíveis e resgata automaticamente as recompensas concluídas, sem abandonar ou trocar missões;
+- as missões aceitam **faixas de horário, quantas você quiser**: em cada faixa a extensão sorteia
+  uma hora, uma vez por dia, e é nessa hora que confere. Duas faixas — uma de manhã e outra à
+  noite — apanham o que só fica pronto mais tarde, coisa que uma visita única nunca apanharia. O
+  painel mostra a hora que saiu hoje em cada faixa. Sem faixa nenhuma, nada muda: continua a
+  conferir de 5 em 5 minutos. A faixa é marcada como feita antes de a verificação começar, para
+  que uma janela que não abre não vire uma tentativa a cada volta do laço até o fim do dia;
 - relê os botões das árvores de talentos após cada troca, incluindo abas posteriores como Ambição;
 - agenda o chefe diário por rank e a Torre Infinita por margem de poder, usando o avanço e a
   condição de parada do próprio jogo. O horário de cada um é uma **faixa** de duas caixas (por
