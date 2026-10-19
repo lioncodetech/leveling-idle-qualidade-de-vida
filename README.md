@@ -46,6 +46,14 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
   dois sentidos que o caminho mais andou e aperta E de novo, até três vezes. O erro de chegada tem
   sinal — um caminho chega sempre curto, nunca longo, porque cada perna recomeça a aceleração —
   então o conserto é continuar, e não procurar em volta;
+- e se nada disso abrir a loja, ela **recarrega a página e tenta mais uma vez** — no máximo duas
+  vezes por hora. O teto existe porque o defeito que isto conserta e o defeito que isto pode causar
+  são o mesmo: com o NPC movido ou o jogo em manutenção, recarregar sem limite vira um laço que
+  recarrega para sempre e nunca diz o que está errado. O pedido fica guardado no navegador, porque
+  nada em memória sobrevive a um recarregamento, e é apagado antes da segunda tentativa começar; um
+  pedido com mais de cinco minutos é ignorado, para que um F5 seu no dia seguinte não mande a
+  extensão sair a comprar sozinha. A segunda tentativa espera o jogo ficar de pé e respeita a pausa
+  geral. Dá para desligar na aba Suprimentos;
 - poções por percentual, mochila/depósito e preparação de venda;
 - reviver sozinho ao cair na caçada: escolha o Reviver mais barato que houver, o melhor, ou um
   fixo, com teto de quantos por hora. Reviver **gasta um item da mochila** — por isso a opção
