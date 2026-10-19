@@ -71,6 +71,15 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
   sinal do jogo, não a marca guardada aqui — se a marca se enganar (relógio mexido, conta aberta
   noutra máquina, dia que virou com o jogo fechado), ela resgata na mesma. Não depende do
   interruptor das Rotinas: receber o que o jogo oferece de graça não é uma ação de risco;
+- **fila: uma automação de cada vez.** Antes, cada automação só olhava a própria bandeira, e por
+  isso o chefe diário podia começar no meio da ida ao NPC — duas a clicar na mesma tela, cada uma a
+  fechar a janela da outra. Agora quem chega e encontra alguém a trabalhar **espera a vez**, por
+  ordem de chegada, e o painel diz quem a tem e quem está na fila. Quem espera demais (cinco
+  minutos) desiste por agora em vez de ficar preso, e uma vez que passe dos dez minutos é dada por
+  abandonada, para que um erro fora do alcance do `finally` não tranque tudo para sempre. A
+  **caçada não tem prioridade**: ela não toma a vez de ninguém e não se mexe enquanto houver alguém
+  a trabalhar ou à espera — trocar de caçada um minuto depois dá no mesmo, mas abrir a lista de
+  caçadas por cima da loja fecha a janela de quem está a comprar. No manual, quem manda é você;
 - monitor da party, diária, eventos, guerra de time e fadiga;
 - pausa geral, registro das ações e bloqueio de botões premium;
 - exportação e importação das configurações em arquivo, para levar a outra janela; entre classes diferentes, a build de status e os pesos do equipamento não vêm.
