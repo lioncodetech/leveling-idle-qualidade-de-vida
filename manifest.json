@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Leveling Idle - qualidade de vida",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "description": "Painel leve e automações seguras para caçadas, poções, mochila, party, rotinas e fadiga.",
   "permissions": [
     "storage"

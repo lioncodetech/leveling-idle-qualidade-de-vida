@@ -18,6 +18,10 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
 - posição, visibilidade e configurações guardadas por conta;
 - `Alt+Q` mostra ou esconde o painel.
 - `Alt+G` desliga os gráficos (liga o modo leve sem animações e sem cenário) e `Alt+H` liga de novo; o HUD e o combate continuam.
+  Com o cenário escondido o **NPC desaparece junto** — ele faz parte da cena —, por isso a ida ao
+  NPC e o botão de testar caminho devolvem o cenário enquanto duram e escondem-no outra vez no fim,
+  erro incluído. A sua preferência não é tocada: é uma suspensão, não um interruptor, e por isso
+  duas idas encavalitadas não devolvem o cenário a meio da primeira.
 - distribuição automática dos pontos de status: escolha uma das 3 builds da classe que o jogo oferece ou monte a sua com um peso para cada atributo; sempre que houver pontos livres, a extensão abre a janela de Status, distribui, confirma e fecha a janela;
 - aba Equipamento: equipar os melhores pelo poder (botão "Equipar melhores" do jogo) ou pelos seus atributos preferidos, com peso e "exigir" para cada atributo das peças, a cada N minutos, uma vez por dia num horário ou uma vez por semana num dia e horário, e opcionalmente ao subir de nível;
 - build de talentos: uma lista em ordem de talentos e o nível de cada um; sempre que houver pontos de talento, a extensão abre a árvore, aprende na ordem e fecha a janela, pulando o que ainda estiver bloqueado;
@@ -50,7 +54,14 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
   só acontece quando não se entrou, e acontece dentro da vez da fila;
 - explica no painel que o descanso é offline e mantém reservas pagas do Hotel sob controle manual;
 - roda várias abas do Codex em fila, encanta somente peças vestidas até o limite e as reservas escolhidas, e organiza time/equipamentos das sombras sem liberar ou fundir nenhuma;
-- compra de poções no NPC da cidade: grava o caminho até ele uma vez e, quando a poção acaba ou a cada N minutos, volta à cidade, refaz o caminho, completa cada item até a quantidade escolhida só com ouro, nas abas Consumíveis e Essências (nunca na de diamantes), e fecha a loja;
+- compra de poções no NPC da cidade: grava o caminho até ele uma vez e, quando a poção acaba ou a cada N minutos, volta à cidade, refaz o caminho, completa cada item até a quantidade escolhida só com ouro, nas abas Consumíveis e Essências (nunca na de diamantes), e fecha a loja. Quando o jogo pede
+  confirmação da compra, a extensão confirma: espera pelo modal até 4 s em vez de o espiar uma
+  única vez — era aí que a compra se perdia, e ela dizia "a compra não apareceu" sem nada ter
+  sido comprado — e depois espera que a quantidade na mochila mude, que é a prova de que o
+  servidor aceitou. Só se clica **dentro de um modal** e nunca num cartão da loja, porque o
+  `Comprar` do cartão dá pelo mesmo nome e clicá-lo outra vez comprava em dobro; e nenhum sim
+  que fale de diamante, premium, cristais, pix ou R$ é clicado, nem no texto nem no rótulo
+  oculto do botão;
 - venda de equipamento ao Brok na ida ao NPC ou com a mochila cheia, até a raridade escolhida, nunca materiais nem peças travadas;
 - ao chegar ao NPC a extensão fala com ele pela **tecla E**, como o jogador faz, em vez de clicar:
   o jogo manda `interact` sem coordenada e quem atende é a proximidade, então não há ponto para
