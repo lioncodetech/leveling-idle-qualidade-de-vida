@@ -4,7 +4,7 @@
   const KEY='lioncode:leveling:qol:v2', POS='lioncode:leveling:posicao', DAILY='lioncode:leveling:diaria:resgatada', BOSS_DAY='lioncode:leveling:chefe:feito', TOWER_DAY='lioncode:leveling:torre:feita', BOSS_SORT='lioncode:leveling:chefe:sorteio', TOWER_SORT='lioncode:leveling:torre:sorteio', LOJA_F5='lioncode:leveling:loja:recarregar';
   const DEFAULTS={aberto:true,minimizado:false,pausado:false,aba:'resumo',leve:false,semAnimacoes:true,semCenario:false,intervalo:1000,escada:false,marco:10,nivelHunt:5,margemHunt:0,codex:false,codexAba:'monstros',codexAbas:['monstros'],codexMin:5,potions:false,hpPotion:45,mpPotion:35,shadowPotion:20,reviver:false,reviverItem:'barato',reviverMax:3,bag:false,bagLimit:90,autoSell:false,autoWarehouse:false,party:true,partyAlert:25,routines:false,missions:true,daily:true,events:true,war:true,bossAuto:false,bossRank:'E',bossHora:'12:00',bossHoraFim:'12:00',towerAuto:false,towerHora:'12:10',towerHoraFim:'12:10',towerMargem:30,towerStop:'10',towerBossPause:true,forgeAuto:false,forgeNivel:5,forgeGoldReserve:100000,forgeStoneReserve:0,forgeMin:1440,shadowBest:false,shadowEquip:false,shadowMin:60,fatigue:false,fatigueLimit:80,returnFatigue:true,autoStatus:false,buildModo:'jogo',buildJogo:'',pesos:{},builds:{},classeBuild:'',autoLoja:false,vendaAuto:false,lojaRefresh:true,vendaRaridade:'Incomum',vendaMochila:90,lojaMin:0,lojaItens:[{nome:'Poção Pequena',alvo:200},{nome:'Poção de Mana Pequena',alvo:100}],lojaNomes:['Poção Pequena','Poção Média','Poção Grande','Poção de Mana Pequena','Poção de Mana Média','Poção de Mana Grande','Reviver Pequeno','Reviver Médio','Reviver Grande','Poção de Sombra','Reviver de Sombra'],rotas:[],charPos:null,lojaUltima:0,autoEquip:false,equipCriterio:'jogo',equipPesos:{Poder:100},equipExigir:{},equipLabels:['Ataque','Defesa','Vida','Mana','Poder'],equipModo:'minutos',equipMin:60,equipHora:'04:00',equipDia:'1',equipNivel:false,equipUltimo:0,autoTalentos:false,talPreReq:true,talArvore:{},talBuilds:{}};
   const json=(v,d)=>{try{return JSON.parse(v)??d}catch{return d}},load=(k,d)=>json(localStorage.getItem(k),d),save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
-  let cfg=(c=>(Array.isArray(c.rota)&&c.rota.length&&!(c.rotas||[]).length&&(c.rotas=[c.rota]),delete c.rota,Array.isArray(c.codexAbas)||(c.codexAbas=[c.codexAba||'monstros']),c))({...DEFAULTS,...load(KEY,{})}),timer=0,running=false,statusBusy=false,huntBusy=false,codexBusy=false,missionBusy=false,challengeBusy=false,forgeBusy=false,shadowBusy=false,lojaBusy=false,faltaPocao=0,gravando=null,ultimaRota=-1,marcandoChar=false,equipBusy=false,lastEquipLevel=0,talBusy=false,lastTalLevel=0,lastTalCheck=0,lastStatusLevel=0,lastStatusCheck=0,lastRoutine=0,lastMission=0,lastCodex=0,lastForge=0,lastShadow=0,codexIndex=0,nextHunt=0,lastLevel=0,drag=null,reviverUsos=[],tamanhoGuardado=0;
+  let cfg=(c=>(Array.isArray(c.rota)&&c.rota.length&&!(c.rotas||[]).length&&(c.rotas=[c.rota]),delete c.rota,Array.isArray(c.codexAbas)||(c.codexAbas=[c.codexAba||'monstros']),c))({...DEFAULTS,...load(KEY,{})}),timer=0,running=false,statusBusy=false,huntBusy=false,codexBusy=false,missionBusy=false,challengeBusy=false,forgeBusy=false,shadowBusy=false,lojaBusy=false,faltaPocao=0,gravando=null,ultimaRota=-1,marcandoChar=false,equipBusy=false,lastEquipLevel=0,talBusy=false,lastTalLevel=0,lastTalCheck=0,lastStatusLevel=0,lastStatusCheck=0,lastRoutine=0,lastMission=0,lastCodex=0,lastForge=0,lastShadow=0,codexIndex=0,nextHunt=0,lastLevel=0,drag=null,reviverUsos=[],tamanhoGuardado=0,diariaBusy=false;
   const cooldown=new Map(),logs=[];
   const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim().toLowerCase();
   const text=(s,r=document)=>r.querySelector(s)?.textContent?.replace(/\s+/g,' ').trim()||'';
@@ -98,11 +98,74 @@
   const diaBrasilia=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
   const diariaFeita=()=>load(DAILY,'')===diaBrasilia();
   function marcarDiariaFeita(){save(DAILY,diaBrasilia());cooldown.set('routine',0);$('[data-routines-state]').textContent='Diária resgatada hoje.';log('Diária resgatada; verifico novamente depois da virada em Brasília.')}
+  /**
+   * O jogo diz quando ha' diaria por resgatar, e e' nele que se acredita.
+   *
+   * Medido no jogo em 19/10/2026: o botao do chat e' `button.slChatDaily`, e ele ganha a classe
+   * `is-ready` enquanto houver recompensa de hoje; assim que ela e' resgatada, a classe cai.
+   *
+   * **Isto manda mais do que a marca guardada aqui.** A marca diz "ja' resgatei hoje" e serve para
+   * nao reabrir a janela a toda a hora; mas se ela se enganar — relogio do computador mexido, conta
+   * aberta noutra maquina, um dia que virou enquanto o jogo estava fechado — quem acredita so' nela
+   * nunca mais resgata nada, e nao diz porque'. O jogo acender `is-ready` ganha sempre.
+   */
+  const diariaPronta=()=>{const b=document.querySelector('.slChatDaily');return !!b&&visible(b)&&b.classList.contains('is-ready')};
+  const painelDiaria=()=>[...document.querySelectorAll('.slWin[data-win="daily"],.slPanel-daily')].find(visible)||null;
+  /**
+   * Abre a janela da diaria, carrega em Resgatar e confere que resgatou mesmo.
+   *
+   * Conferir importa: um clique que nao pega deixaria a extensao a dizer "resgatada hoje" e a nao
+   * voltar la' ate' amanha, que e' o defeito mais caro possivel aqui — o dono so' descobre quando
+   * a sequencia de dias se parte. Medido: depois do resgate o botao `.drwClaim` **desaparece** e o
+   * `is-ready` do chat cai, e a janela passa a dizer "Recompensa de hoje resgatada".
+   */
+  async function resgatarDiaria(manual=false){
+    if(!manual&&!cfg.daily)return false;
+    if(diariaBusy||lojaBusy||statusBusy||challengeBusy)return false;
+    if(!manual&&!diariaPronta()&&diariaFeita())return false;
+    diariaBusy=true;
+    const st=$('[data-routines-state]');
+    try{
+      let w=painelDiaria();
+      if(!w){
+        const abrir=[...document.querySelectorAll('.slChatDaily')].find(visible)||findButton(['recompensas diarias','diaria!']);
+        if(!abrir){if(manual)st.textContent='Não achei por onde abrir a diária.';return false}
+        if(!clickSafe(abrir,'Abrindo as Recompensas Diárias'))return false;
+        for(let i=0;i<20&&!painelDiaria();i++)await sleep(250);
+        w=painelDiaria();
+      }
+      if(!w){st.textContent='A janela da diária não abriu.';log(st.textContent,'warn');return false}
+      const botao=w.querySelector('.drwClaim');
+      if(!botao||!visible(botao)){
+        // Sem botao: ou ja' estava resgatada, ou o jogo mudou a janela. O texto separa os dois.
+        const feita=/resgatad|volte amanha/.test(norm(w.textContent));
+        if(feita)marcarDiariaFeita();else log('Abri a diária e não achei o botão de resgatar.','warn');
+        await fechar(painelDiaria);
+        return feita}
+      if(!clickSafe(botao,'Resgatando a recompensa diária'))return false;
+      for(let i=0;i<16;i++){await sleep(250);const atual=painelDiaria();if(!atual)break;if(!atual.querySelector('.drwClaim')||!diariaPronta())break}
+      const depois=painelDiaria();
+      const resgatou=!diariaPronta()||(depois&&!depois.querySelector('.drwClaim'));
+      if(resgatou)marcarDiariaFeita();
+      else{st.textContent='Carreguei em Resgatar e o jogo não confirmou.';log(st.textContent,'warn')}
+      await fechar(painelDiaria);
+      return!!resgatou;
+    }catch(e){log(`Erro na diária: ${e.message}`,'error');return false}
+    finally{diariaBusy=false;}}
   const janelaDiaria=()=>[...document.querySelectorAll('[role="dialog"],.slModal,.slWin')].find(e=>visible(e)&&/recompensas diarias/.test(norm(e.textContent)));
   function conferirDiariaAberta(fechar=false){const w=janelaDiaria();if(!w)return false;const botoes=[...w.querySelectorAll('button')],resgatar=botoes.find(b=>visible(b)&&norm(b.textContent)==='resgatar'),confirmado=/resgatad|volte amanha|ja resgat/.test(norm(w.textContent));if(!confirmado)return false;marcarDiariaFeita();if(fechar){const x=botoes.find(b=>visible(b)&&(/fechar/.test(norm(`${b.textContent} ${b.ariaLabel||''} ${b.title||''}`))||norm(b.textContent)==='✕'));x?.click()}return !resgatar}
   const missionWin=()=>[...document.querySelectorAll('[role="dialog"],.slWin,.slModal')].find(e=>visible(e)&&norm(e.querySelector('h1,h2')?.textContent).startsWith('missoes'));
   async function missionsTick(force=false){if(!force&&(!cfg.routines||!cfg.missions))return;if(missionBusy||huntBusy||codexBusy||lojaBusy)return;missionBusy=true;const st=$('[data-missions-state]');let aberto=null,aceitas=0,resgatadas=0;try{aberto=await openWin(missionWin,'Missões');if(!aberto){st.textContent='Não consegui abrir Missões.';log(st.textContent,'warn');return}const W=()=>missionWin()||aberto.w,tabs=[...W().querySelectorAll('[role="tab"],.slTab')].filter(visible);for(const tab of tabs.length?tabs:[null]){if(tab&&tab.getAttribute('aria-selected')!=='true'&&!tab.classList.contains('slTabOn')){tab.click();await sleep(300)}for(let i=0;i<30;i++){const w=W(),b=[...w.querySelectorAll('button')].find(x=>{const t=norm(x.textContent);return visible(x)&&!x.disabled&&['resgatar','receber','coletar','reivindicar','aceitar','iniciar missao'].includes(t)&&!unsafe(x)});if(!b)break;const t=norm(b.textContent),resgate=['resgatar','receber','coletar','reivindicar'].includes(t);b.click();resgate?resgatadas++:aceitas++;await sleep(450);const confirmar=[...document.querySelectorAll('.slModalActions button,[role="dialog"] button')].find(x=>visible(x)&&!W().contains(x)&&/^(confirmar|aceitar|resgatar|coletar)$/.test(norm(x.textContent))&&!unsafe(x));if(confirmar){confirmar.click();await sleep(400)}}}st.textContent=`Missões: ${aceitas} aceita(s), ${resgatadas} recompensa(s).`;log(st.textContent)}catch(e){st.textContent=`Erro nas missões: ${e.message}`;log(st.textContent,'error')}finally{if(aberto)await fechar(missionWin);missionBusy=false;lastMission=Date.now()}}
   function missionsAutoTick(){if(!cfg.routines||!cfg.missions||missionBusy)return;if(!lastMission||Date.now()-lastMission>=300000)missionsTick()}
+  /**
+   * A diaria nao passa pelo interruptor "Rotinas".
+   *
+   * Ela nao e' uma acao de risco: nao gasta, nao vende, nao viaja e nao mexe no personagem — recebe
+   * o que o jogo esta' a oferecer de graca. Esconde-la atras do interruptor das automacoes de risco
+   * fazia com que, com tudo no padrao, a recompensa simplesmente nunca fosse resgatada — que foi o
+   * que o dono encontrou em 19/10/2026, com `routines:false` na conta dele.
+   */
+  function diariaTick(){if(!cfg.daily||diariaBusy)return;if(!diariaPronta())return;if(!ready('diaria',120000))return;void resgatarDiaria()}
   function routinesTick(force=false){if(!force&&!cfg.routines)return;if(cfg.daily)conferirDiariaAberta(true);const found=[];if(cfg.daily&&!diariaFeita()){const b=findButton(['diária!','diaria!','recompensa diária']);if(b)found.push({b,n:'diária'})}if(cfg.events){const b=findButton(['evento !','eventos !','evento disponível']);if(b)found.push({b,n:'evento'})}if(cfg.war){const b=findButton(['guerra de time !','guerra !','team war !']);if(b)found.push({b,n:'guerra'})}$('[data-routines-state]').textContent=diariaFeita()&&!found.length?'Diária resgatada hoje.':found.length?`Disponível: ${found.map(x=>x.n).join(', ')}`:'Nada disponível agora.';if(found.length&&ready('routine',60000)&&clickSafe(found[0].b,`Abrindo ${found[0].n} disponível`)&&found[0].n==='diária')setTimeout(()=>conferirDiariaAberta(true),1200)}
   const desafioWin=titulo=>[...document.querySelectorAll('[role="dialog"],.slWin,.slModal')].find(e=>visible(e)&&norm(e.querySelector('h1,h2')?.textContent)===norm(titulo));
   const bossWin=()=>desafioWin('Chefes Diários'),towerWin=()=>desafioWin('Torre Infinita');
@@ -387,7 +450,7 @@
   const RARIDADES=['Comum','Incomum','Raro','Épico','Lendário','Monarca'],sellWin=()=>[...document.querySelectorAll('.slWin[data-win="sell"]')].find(visible);
   async function venderItens(){const loja=shopWin(),bt=loja?.querySelector('.slShopSell');if(!bt)return'o botão Vender itens não apareceu';bt.click();for(let i=0;i<15&&!sellWin();i++)await sleep(200);const W=sellWin;if(!W())return'o painel de venda não abriu';const limite=RARIDADES.indexOf(cfg.vendaRaridade),ouro0=num(text('.slSellPurse',W())),ir1=W().querySelector('.slSellPager .slPagBtn[aria-label="Primeira página"]');if(ir1&&!ir1.disabled){ir1.click();await sleep(350)}let marcados=0;for(let pg=0;pg<100;pg++){for(const row of W().querySelectorAll('.slSellRow')){const sub=text('.slSellName small',row).split('·').map(x=>x.trim()),rar=RARIDADES.indexOf(sub[0]),cb=row.querySelector('.slSellCheck');if(sub.length<3||!/^nv\b/i.test(sub[2])||rar<0||rar>limite||!cb||cb.disabled||cb.checked)continue;cb.click();marcados++;await sleep(30)}const prox=W().querySelector('.slSellPager .slPagBtn[aria-label="Avançar"]');if(!prox||prox.disabled)break;prox.click();await sleep(400)}if(!marcados)return'nada para vender';await sleep(300);const cont=num(text('.slSellSumCount',W()));if(cont!==marcados){[...W().querySelectorAll('.slSellFootActs button')].find(e=>norm(e.textContent).includes('limpar'))?.click();return`o jogo marcou ${cont} em vez de ${marcados}; não vendi`}const go=W().querySelector('.slSellGo');if(!go||go.disabled)return'o botão Vender selecionados está desativado';const antes=new Set(document.querySelectorAll('button'));go.click();await sleep(800);const c=[...document.querySelectorAll('button')].find(e=>!antes.has(e)&&!e.matches('.slShopSell,.slSellGo')&&!/^vender (itens|selecionados)/.test(norm(e.textContent))&&visible(e)&&!panel.contains(e)&&/^(vender|confirmar|sim)/.test(norm(e.textContent))&&!/diamante|premium/.test(norm(e.textContent)));if(c){c.click();await sleep(900)}const ouro1=num(text('.slSellPurse',W()||document));return ouro1>ouro0?`${marcados} peça(s) vendida(s) por ${(ouro1-ouro0).toLocaleString('pt-BR')} de ouro`:`marquei ${marcados} peça(s), mas o ouro não subiu; confira`}
   function lojaTick(d){if(!lojaBusy&&shopWin())lerNomesLoja();if((!cfg.autoLoja&&!cfg.vendaAuto)||lojaBusy||statusBusy||talBusy||equipBusy||huntBusy||!cfg.rotas.length)return;const intervalo=cfg.autoLoja&&Number(cfg.lojaMin)>0&&Date.now()-cfg.lojaUltima>=Number(cfg.lojaMin)*60000,acabou=cfg.autoLoja&&faltaPocao&&Date.now()-faltaPocao<60000,cheia=cfg.vendaAuto&&d.bagPct>=Number(cfg.vendaMochila);if((intervalo||acabou||cheia)&&ready('loja',120000))comprar()}
-  function tick(){const d=screen();draw(d);drawReviver();drawDesafios();partyTick(d);fatigueTick(d);if(cfg.pausado||running||lojaBusy)return;running=true;try{reviverTick();potionTick(d);huntTick(d);codexTick();bagTick(d);statusTick(d);talTick(d);equipTick(d);lojaTick(d);missionsAutoTick();desafiosTick();forgeTick();shadowTick();if(Date.now()-lastRoutine>60000){routinesTick();lastRoutine=Date.now()}}catch(e){log(`Erro isolado: ${e.message}`,'error')}finally{running=false}}
+  function tick(){const d=screen();draw(d);drawReviver();drawDesafios();partyTick(d);fatigueTick(d);if(cfg.pausado||running||lojaBusy)return;running=true;try{reviverTick();potionTick(d);huntTick(d);codexTick();bagTick(d);statusTick(d);talTick(d);equipTick(d);lojaTick(d);diariaTick();missionsAutoTick();desafiosTick();forgeTick();shadowTick();if(Date.now()-lastRoutine>60000){routinesTick();lastRoutine=Date.now()}}catch(e){log(`Erro isolado: ${e.message}`,'error')}finally{running=false}}
   /**
    * Diz a hora que saiu hoje para cada desafio.
    *

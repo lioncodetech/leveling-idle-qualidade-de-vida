@@ -60,6 +60,11 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
   começa desligada, nunca troca de item por conta própria quando o escolhido acaba e, alcançado o
   teto, deixa a contagem de 10 segundos correr e o jogo levar você para Seul, que é o que já
   acontecia. O XP perdido na queda é da morte e nenhum Reviver desfaz;
+- **resgata a recompensa diária de login sozinha**: quando o jogo acende o aviso, ela abre a
+  janela, carrega em Resgatar e confere que resgatou mesmo antes de dar por feito. Quem manda é o
+  sinal do jogo, não a marca guardada aqui — se a marca se enganar (relógio mexido, conta aberta
+  noutra máquina, dia que virou com o jogo fechado), ela resgata na mesma. Não depende do
+  interruptor das Rotinas: receber o que o jogo oferece de graça não é uma ação de risco;
 - monitor da party, diária, eventos, guerra de time e fadiga;
 - pausa geral, registro das ações e bloqueio de botões premium;
 - exportação e importação das configurações em arquivo, para levar a outra janela; entre classes diferentes, a build de status e os pesos do equipamento não vêm.
