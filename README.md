@@ -36,7 +36,18 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
   exemplo 10:00 e 12:00): todos os dias a extensão sorteia uma hora dentro dela e é nessa hora que
   entra, e o painel mostra a hora que saiu hoje. O sorteio é feito uma vez por dia e fica guardado —
   sortear a cada segundo cairia sempre no início da faixa. Mexer nas caixas sorteia outra vez na
-  hora, e duas caixas iguais valem como hora fixa, que é o que acontecia antes de haver faixa;
+  hora, e duas caixas iguais valem como hora fixa, que é o que acontecia antes de haver faixa.
+  Ao abrir a janela do chefe ela
+  pergunta ao **jogo** se o rank de hoje já foi feito — pelo rótulo da aba, e sobretudo por não haver
+  mais o botão Enfrentar — e, se já foi, marca o dia e só fecha a janela. A marca local não bastava:
+  ela não sabe do chefe que você enfrentou à mão nem do que outra janela já fez, e sem isso a
+  extensão reabria a janela a cada minuto até à meia-noite sem nunca conseguir entrar. A janela
+  passou a fechar em todos os caminhos, incluindo o do erro. E porque um desafio obriga a sair da
+  caçada, a extensão guarda qual era — lê o cartão **live** na lista antes de sair, que é a única
+  fonte do nome — e volta a ela no fim, fechando a janela do desafio e a lista. Antes o
+  personagem ficava parado na cidade a ganhar nada até a escada reparar nisso, e com a escada
+  desligada ficava ali para sempre. Quem **entrou** no desafio não é arrancado de volta: a volta
+  só acontece quando não se entrou, e acontece dentro da vez da fila;
 - explica no painel que o descanso é offline e mantém reservas pagas do Hotel sob controle manual;
 - roda várias abas do Codex em fila, encanta somente peças vestidas até o limite e as reservas escolhidas, e organiza time/equipamentos das sombras sem liberar ou fundir nenhuma;
 - compra de poções no NPC da cidade: grava o caminho até ele uma vez e, quando a poção acaba ou a cada N minutos, volta à cidade, refaz o caminho, completa cada item até a quantidade escolhida só com ouro, nas abas Consumíveis e Essências (nunca na de diamantes), e fecha a loja;

@@ -19,7 +19,7 @@
   const STATS=['STR','AGI','VIT','INT','PER','CRIT','LUK','DEF FIS','RES MAG'],STAT_NOMES={STR:'Força',AGI:'Agilidade',VIT:'Vitalidade',INT:'Inteligência',PER:'Percepção',CRIT:'Crítico',LUK:'Sorte','DEF FIS':'Defesa física','RES MAG':'Resist. mágica'};
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const panel=document.createElement('section');panel.id='lioncode-leveling';
-  panel.innerHTML=`<header data-drag><strong>Leveling QoL <small>0.14.0</small></strong><i data-engine></i><button data-min>–</button><button data-close>×</button></header><div class="mini" data-mini>Carregando…</div><nav>${['resumo','caçadas','desafios','suprimentos','build','talentos','equipamento','rotinas','ajustes'].map(x=>`<button data-tab="${x}">${x}</button>`).join('')}</nav><main>
+  panel.innerHTML=`<header data-drag><strong>Leveling QoL <small>${(()=>{try{return chrome.runtime.getManifest().version}catch{return ''}})()}</small></strong><i data-engine></i><button data-min>–</button><button data-close>×</button></header><div class="mini" data-mini>Carregando…</div><nav>${['resumo','caçadas','desafios','suprimentos','build','talentos','equipamento','rotinas','ajustes'].map(x=>`<button data-tab="${x}">${x}</button>`).join('')}</nav><main>
   <section data-page="resumo"><div class="grid"><span>Personagem</span><b data-personagem>—</b><span>HP / Mana</span><b data-vitals>—</b><span>XP</span><b data-xp>—</b><span>Alvo</span><b data-alvo>—</b><span>Mochila</span><b data-mochila>—</b><span>Party</span><b data-party>—</b><span>Fadiga</span><b data-fatigue>—</b><span>Ping</span><b data-ping>—</b></div><div class="actions"><button class="primary" data-pause></button><button data-city>Voltar à cidade</button></div><div class="log" data-log></div></section>
   <section data-page="caçadas"><fieldset><legend>Escada por nível</legend><label class="toggle"><input type="checkbox" data-cfg="escada"> Escada automática</label><label>Trocar a cada <input type="number" min="1" max="500" data-cfg="marco"> níveis</label><label>Nível-alvo da caça <input type="number" min="1" max="9999" data-cfg="nivelHunt"></label><label>Margem permitida <input type="number" min="0" max="100" data-cfg="margemHunt"></label><p class="hint">Escolhe a área mais perto do nível-alvo sem ultrapassar a margem.</p><button data-hunt-now>Procurar caça agora</button><output data-hunt-state>Desligada</output></fieldset><fieldset><legend>Caçada pelo Codex</legend><label class="toggle"><input type="checkbox" data-cfg="codex"> Verificar automaticamente</label>${Object.entries({monstros:'Monstros',loots:'Loots',equipamentos:'Equipamentos',aprimoramento:'Aprimoramento'}).map(([k,v])=>`<label class="toggle"><input type="checkbox" data-codex-aba="${k}"> ${v}</label>`).join('')}<label>Verificar a cada <input type="number" min="1" max="1440" data-cfg="codexMin"> min</label><button data-codex-now>Procurar objetivo agora</button><output data-codex-state>Desligado</output><p class="hint">Percorre as abas marcadas em fila e escolhe o incompleto mais perto do próximo marco. Aprimoramento só abre a Forja.</p></fieldset></section>
   <section data-page="desafios"><fieldset><legend>Chefe diário</legend><label class="toggle"><input type="checkbox" data-cfg="bossAuto"> Enfrentar automaticamente</label><label>Rank <select data-cfg="bossRank" data-str>${['E','D','C','B','A','S'].map(x=>`<option>${x}</option>`).join('')}</select></label><label>Entre <input type="time" data-cfg="bossHora" data-str> e <input type="time" data-cfg="bossHoraFim" data-str></label><button data-boss-now>Verificar chefe agora</button><output data-boss-state>Desligado</output><output data-boss-sorteio>—</output><p class="hint">Uma tentativa por dia. Perder também consome a chance. O horário é sorteado uma vez por dia dentro da faixa; deixe as duas caixas iguais para ter hora fixa.</p></fieldset><fieldset><legend>Torre Infinita</legend><label class="toggle"><input type="checkbox" data-cfg="towerAuto"> Subir automaticamente</label><label>Entre <input type="time" data-cfg="towerHora" data-str> e <input type="time" data-cfg="towerHoraFim" data-str></label><label>Margem de poder <input type="number" min="0" max="300" data-cfg="towerMargem">%</label><label>Parar <select data-cfg="towerStop" data-str><option value="derrota">quando perder</option><option value="10">após 10 andares</option><option value="20">após 20 andares</option></select></label><label class="toggle"><input type="checkbox" data-cfg="towerBossPause"> Pausar antes de chefes</label><button data-tower-now>Verificar Torre agora</button><output data-tower-state>Desligada</output><output data-tower-sorteio>—</output><p class="hint">O horário é sorteado uma vez por dia dentro da faixa; deixe as duas caixas iguais para ter hora fixa.</p></fieldset><fieldset><legend>Forja inteligente</legend><label class="toggle"><input type="checkbox" data-cfg="forgeAuto"> Encantar peças vestidas</label><label>Até +<input type="number" min="1" max="20" data-cfg="forgeNivel"></label><label>Reservar ouro <input type="number" min="0" data-cfg="forgeGoldReserve"></label><label>Reservar pedras <input type="number" min="0" data-cfg="forgeStoneReserve"></label><label>A cada <input type="number" min="10" max="10080" data-cfg="forgeMin"> min</label><button data-forge-now>Aprimorar agora</button><output data-forge-state>Desligada</output></fieldset><fieldset><legend>Sombras</legend><label class="toggle"><input type="checkbox" data-cfg="shadowBest"> Montar melhor time</label><label class="toggle"><input type="checkbox" data-cfg="shadowEquip"> Equipar melhores nas sombras do time</label><label>A cada <input type="number" min="10" max="10080" data-cfg="shadowMin"> min</label><button data-shadow-now>Organizar agora</button><output data-shadow-state>Desligado</output><p class="hint">Não libera nem funde sombras. Extração já é automática no jogo.</p></fieldset><fieldset><legend>Descanso offline</legend><output>O jogo só calcula o descanso desconectado. Reservas pagas do Hotel permanecem manuais.</output></fieldset></section>
@@ -248,15 +248,73 @@
     save(chave,{dia,hora,inicio,fim});return hora}
   const horaDoChefe=()=>horaDoDia(BOSS_SORT,cfg.bossHora,cfg.bossHoraFim);
   const horaDaTorre=()=>horaDoDia(TOWER_SORT,cfg.towerHora,cfg.towerHoraFim);
-  async function prepararDesafio(nome){if(!naCacada())return true;if(!returnCity(nome))return false;for(let i=0;i<40&&naCacada();i++)await sleep(500);if(naCacada())return false;await sleep(2000);return true}
-  async function chefeDiario(force=false){if(!force&&!cfg.bossAuto)return;if(challengeBusy||load(BOSS_DAY,'')===diaBrasilia())return;challengeBusy=true;const soltar=await pedirVez('chefe');if(!soltar){challengeBusy=false;return}const st=$('[data-boss-state]');let aberto=null;try{if(!await prepararDesafio('chefe diário')){st.textContent='Não consegui voltar à cidade.';return}aberto=await openWin(bossWin,'Chefes Diários');if(!aberto){st.textContent='Não consegui abrir Chefes Diários.';return}const W=()=>bossWin()||aberto.w,rank=String(cfg.bossRank||'E').toUpperCase();let tab=[...W().querySelectorAll('[role="tab"]')].find(t=>norm(t.textContent).startsWith(rank.toLowerCase()+' '));if(!tab){st.textContent=`Rank ${rank} não apareceu.`;return}if(/bloqueado|concluido|feito|indisponivel/.test(norm(tab.textContent))){st.textContent=`Chefe Rank ${rank}: ${tab.textContent.replace(/\s+/g,' ').trim()}.`;return}if(tab.getAttribute('aria-selected')!=='true'){tab.click();await sleep(350)}const b=[...W().querySelectorAll('button')].find(x=>visible(x)&&norm(x.textContent)==='enfrentar');if(!b){st.textContent=`Chefe Rank ${rank} sem tentativa disponível.`;return}b.click();await sleep(500);const c=[...document.querySelectorAll('[role="dialog"] button,.slModalActions button')].find(x=>visible(x)&&/^(enfrentar|confirmar|entrar)$/.test(norm(x.textContent))&&!unsafe(x));c?.click();save(BOSS_DAY,diaBrasilia());st.textContent=`Entrou no chefe diário Rank ${rank}.`;log(st.textContent)}catch(e){st.textContent=`Erro no chefe: ${e.message}`;log(st.textContent,'error')}finally{soltar();challengeBusy=false}}
+  /**
+   * O que o **jogo** diz sobre o chefe de hoje: `'feito'`, `'bloqueado'` ou `null` (da' para entrar).
+   *
+   * A marca local (`BOSS_DAY`) nao basta: ela nao sabe do chefe que o dono enfrentou a' mao, nem do
+   * que outra janela ja' fez, nem sobrevive a limpar os dados do navegador. Sem perguntar ao jogo, a
+   * extensao reabria a janela a cada minuto ate' a' meia-noite e nunca conseguia entrar.
+   *
+   * Nao haver botao `Enfrentar` com a aba do rank aberta e' a prova mais firme de que a tentativa de
+   * hoje foi gasta — nao depende de adivinhar como o jogo escreve "concluido".
+   */
+  const estadoDoChefe=(rotulo,temEnfrentar)=>/concluido|concluida|completo|completa|feito|feita|enfrentado|derrotado/.test(rotulo)?'feito':/bloqueado|indisponivel/.test(rotulo)?'bloqueado':temEnfrentar?null:'feito';
+  /**
+   * A caçada em que o personagem estava, para poder voltar a ela depois do desafio.
+   *
+   * Um desafio obriga a sair da caçada, e sair era so' metade do trabalho: o personagem ficava
+   * parado na cidade a ganhar nada ate' a escada reparar nisso — e com a escada desligada, ou com a
+   * caçada escolhida a' mao, ficava ali para sempre. A lista e' a unica fonte que diz **qual** era:
+   * o HUD nao traz o nome da caçada.
+   */
+  let cacaAnterior=null;
+  async function cacaViva(){let aberto=null;
+    try{aberto=await openWin(huntWin,'Caçadas');if(!aberto)return null;
+      const W=()=>huntWin()||aberto.w;await huntPagina1(W);
+      for(let pg=0;pg<60;pg++){const x=[...W().querySelectorAll('.slHuntCard')].map(lerCard).find(c=>c.estado==='live');
+        if(x)return{nome:x.nome,area:x.area,dif:x.dif};
+        if(!await huntProxima(W))break}
+      return null}
+    catch(e){log(`Não consegui ver em que caçada estava: ${e.message}`,'warn');return null}
+    finally{if(aberto)await fechar(huntWin)}}
+  /** Procura, pagina a pagina, o cartao daquela caçada exacta. */
+  async function cardDaCaca(W,alvo){await huntPagina1(W);
+    for(let pg=0;pg<60;pg++){const c=[...W().querySelectorAll('.slHuntCard')].find(e=>{const x=lerCard(e);return x.nome===alvo.nome&&x.area===alvo.area&&x.dif===alvo.dif});
+      if(c)return c;if(!await huntProxima(W))break}
+    return null}
+  /** Volta a' caçada guardada. Nao faz nada se nao havia nenhuma, ou se ja' esta' numa. */
+  async function retomarCaca(){const alvo=cacaAnterior;cacaAnterior=null;
+    if(!alvo||naCacada())return;
+    let aberto=null;
+    try{aberto=await openWin(huntWin,'Caçadas');if(!aberto){log(`Não consegui abrir as caçadas para voltar a ${alvo.nome}.`,'warn');return}
+      const W=()=>huntWin()||aberto.w,tab=W().querySelector('.slTab[data-tab="hunts"]');
+      if(tab&&!tab.classList.contains('slTabOn')){tab.click();await sleep(400)}
+      const todas=[...W().querySelectorAll('.slHuntFilters .slChip')].find(c=>norm(c.textContent).startsWith('todas'));
+      if(todas&&!todas.classList.contains('slChipOn')){todas.click();await sleep(400)}
+      const card=await cardDaCaca(W,alvo);
+      const b=card&&[...card.querySelectorAll('button')].find(e=>norm(e.textContent)==='iniciar'&&!e.disabled);
+      if(!b){log(`Não achei o Iniciar de ${alvo.nome} para voltar; ficou na cidade.`,'warn');return}
+      b.click();await sleep(700);
+      const c=[...document.querySelectorAll('button')].find(e=>visible(e)&&!panel.contains(e)&&/cacar mesmo assim|sair e iniciar|trocar de cacada|confirmar/.test(norm(e.textContent)));
+      if(c&&!unsafe(c)){c.click();await sleep(600)}
+      log(`Voltei à caçada ${alvo.nome}${alvo.area?` (área Nv ${alvo.area})`:''}.`)}
+    catch(e){log(`Erro ao voltar à caçada: ${e.message}`,'error')}
+    finally{if(aberto)await fechar(huntWin)}}
+  async function prepararDesafio(nome){if(!naCacada())return true;cacaAnterior=await cacaViva();if(!returnCity(nome))return false;for(let i=0;i<40&&naCacada();i++)await sleep(500);if(naCacada())return false;await sleep(2000);return true}
+  async function chefeDiario(force=false){if(!force&&!cfg.bossAuto)return;if(challengeBusy||load(BOSS_DAY,'')===diaBrasilia())return;challengeBusy=true;const soltar=await pedirVez('chefe');if(!soltar){challengeBusy=false;return}const st=$('[data-boss-state]');let aberto=null,entrou=false;try{if(!await prepararDesafio('chefe diário')){st.textContent='Não consegui voltar à cidade.';return}aberto=await openWin(bossWin,'Chefes Diários');if(!aberto){st.textContent='Não consegui abrir Chefes Diários.';return}const W=()=>bossWin()||aberto.w,rank=String(cfg.bossRank||'E').toUpperCase();let tab=[...W().querySelectorAll('[role="tab"]')].find(t=>norm(t.textContent).startsWith(rank.toLowerCase()+' '));if(!tab){st.textContent=`Rank ${rank} não apareceu.`;return}
+    if(estadoDoChefe(norm(tab.textContent),true)==='feito'){save(BOSS_DAY,diaBrasilia());st.textContent=`Chefe Rank ${rank} já estava feito hoje; fechei a janela.`;log(st.textContent);return}
+    if(estadoDoChefe(norm(tab.textContent),true)==='bloqueado'){st.textContent=`Chefe Rank ${rank}: ${tab.textContent.replace(/\s+/g,' ').trim()}.`;return}
+    if(tab.getAttribute('aria-selected')!=='true'){tab.click();await sleep(350)}
+    const b=[...W().querySelectorAll('button')].find(x=>visible(x)&&norm(x.textContent)==='enfrentar'&&!x.disabled);
+    if(estadoDoChefe(norm(tab.textContent),!!b)==='feito'){save(BOSS_DAY,diaBrasilia());st.textContent=`Chefe Rank ${rank} sem tentativa hoje: dei por feito e fechei a janela.`;log(st.textContent);return}
+    if(!b){st.textContent=`Chefe Rank ${rank} sem tentativa disponível.`;return}b.click();await sleep(500);const c=[...document.querySelectorAll('[role="dialog"] button,.slModalActions button')].find(x=>visible(x)&&/^(enfrentar|confirmar|entrar)$/.test(norm(x.textContent))&&!unsafe(x));c?.click();entrou=true;save(BOSS_DAY,diaBrasilia());st.textContent=`Entrou no chefe diário Rank ${rank}.`;log(st.textContent)}catch(e){st.textContent=`Erro no chefe: ${e.message}`;log(st.textContent,'error')}finally{if(aberto)await fechar(bossWin);if(!entrou)await retomarCaca();cacaAnterior=null;soltar();challengeBusy=false}}
   async function torre(force=false){
     if(!force&&!cfg.towerAuto)return;
     if(challengeBusy||load(TOWER_DAY,'')===diaBrasilia())return;
     challengeBusy=true;
     const soltar=await pedirVez('torre');if(!soltar){challengeBusy=false;return}
     const st=$('[data-tower-state]');
-    let aberto=null;
+    let aberto=null,entrou=false;
     try{
       if(!await prepararDesafio('Torre Infinita')){st.textContent='Não consegui voltar à cidade.';return}
       aberto=await openWin(towerWin,'Torre Infinita');
@@ -284,11 +342,12 @@
       await sleep(500);
       const c=[...document.querySelectorAll('[role="dialog"] button,.slModalActions button')].find(x=>visible(x)&&/^(entrar|confirmar)$/.test(norm(x.textContent))&&!unsafe(x));
       c?.click();
+      entrou=true;
       save(TOWER_DAY,diaBrasilia());
       st.textContent=`Torre iniciada com margem de ${cfg.towerMargem}%.`;
       log(st.textContent);
     }catch(e){st.textContent=`Erro na Torre: ${e.message}`;log(st.textContent,'error')}
-    finally{soltar();challengeBusy=false}
+    finally{if(aberto&&!entrou)await fechar(towerWin);if(!entrou)await retomarCaca();cacaAnterior=null;soltar();challengeBusy=false}
   }
   function desafiosTick(){if(challengeBusy)return;if(cfg.bossAuto&&horaPassou(horaDoChefe())&&load(BOSS_DAY,'')!==diaBrasilia()&&ready('boss-auto',60000))chefeDiario();else if(cfg.towerAuto&&horaPassou(horaDaTorre())&&load(TOWER_DAY,'')!==diaBrasilia()&&ready('tower-auto',60000))torre()}
   const forgeWin=()=>desafioWin('Forja'),shadowWin=()=>desafioWin('Exército das Sombras');
