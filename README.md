@@ -46,7 +46,15 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
   mais o botão Enfrentar — e, se já foi, marca o dia e só fecha a janela. A marca local não bastava:
   ela não sabe do chefe que você enfrentou à mão nem do que outra janela já fez, e sem isso a
   extensão reabria a janela a cada minuto até à meia-noite sem nunca conseguir entrar. A janela
-  passou a fechar em todos os caminhos, incluindo o do erro. E porque um desafio obriga a sair da
+  passou a fechar em todos os caminhos, incluindo o do erro. A ida ao chefe é **uma por dia** e
+  fica marcada antes de sair da caçada: antes o dia só era marcado ao entrar, e todo o caminho
+  que falhava deixava-o em branco — o tick voltava um minuto depois e o personagem passava o dia
+  a ser levado para a cidade e trazido de volta sem nunca jogar. Falhar gasta a ida do dia, cada
+  falha diz no painel que fica para amanhã, e o botão `Verificar chefe agora` repete-a à mão.
+  A Torre segue a mesma regra, incluindo quando desiste por poder insuficiente — era a falha que
+  mais se repetia, e cada repetição era uma viagem à cidade — e o `Verificar Torre agora` também
+  a repete à mão.
+  E porque um desafio obriga a sair da
   caçada, a extensão guarda qual era — lê o cartão **live** na lista antes de sair, que é a única
   fonte do nome — e volta a ela no fim, fechando a janela do desafio e a lista. Antes o
   personagem ficava parado na cidade a ganhar nada até a escada reparar nisso, e com a escada

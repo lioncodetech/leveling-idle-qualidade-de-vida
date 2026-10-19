@@ -314,29 +314,48 @@
     catch(e){log(`Erro ao voltar à caçada: ${e.message}`,'error')}
     finally{if(aberto)await fechar(huntWin)}}
   async function prepararDesafio(nome){if(!naCacada())return true;cacaAnterior=await cacaViva();if(!returnCity(nome))return false;for(let i=0;i<40&&naCacada();i++)await sleep(500);if(naCacada())return false;await sleep(2000);return true}
-  async function chefeDiario(force=false){if(!force&&!cfg.bossAuto)return;if(challengeBusy||load(BOSS_DAY,'')===diaBrasilia())return;challengeBusy=true;const soltar=await pedirVez('chefe');if(!soltar){challengeBusy=false;return}const st=$('[data-boss-state]');let aberto=null,entrou=false;try{if(!await prepararDesafio('chefe diário')){st.textContent='Não consegui voltar à cidade.';return}aberto=await openWin(bossWin,'Chefes Diários');if(!aberto){st.textContent='Não consegui abrir Chefes Diários.';return}const W=()=>bossWin()||aberto.w,rank=String(cfg.bossRank||'E').toUpperCase();let tab=[...W().querySelectorAll('[role="tab"]')].find(t=>norm(t.textContent).startsWith(rank.toLowerCase()+' '));if(!tab){st.textContent=`Rank ${rank} não apareceu.`;return}
+  async function chefeDiario(force=false){if(!force&&!cfg.bossAuto)return;if(challengeBusy)return;if(!force&&load(BOSS_DAY,'')===diaBrasilia())return;challengeBusy=true;const soltar=await pedirVez('chefe');if(!soltar){challengeBusy=false;return}const st=$('[data-boss-state]');let aberto=null,entrou=false;
+    /**
+     * A ida de hoje fica marcada **antes** de sair da caçada, e nao no fim.
+     *
+     * Era este o defeito: so' se marcava o dia ao entrar no chefe, e todo o caminho que falhava —
+     * rank que nao apareceu, janela que nao abriu, rank bloqueado — deixava o dia em branco. O tick
+     * voltava a chamar um minuto depois, e o `prepararDesafio` sai da caçada **antes** de olhar para
+     * nada: o personagem passava o dia a ser levado para a cidade e trazido de volta, de minuto a
+     * minuto, sem nunca jogar. Uma tentativa por dia e' o que foi pedido, e falhar gasta a do dia:
+     * o botao `Verificar chefe agora` repete-a a' mao quando se quiser.
+     */
+    if(!force)save(BOSS_DAY,diaBrasilia());
+    try{if(!await prepararDesafio('chefe diário')){st.textContent='Não consegui voltar à cidade; o chefe fica para amanhã.';log(st.textContent,'warn');return}aberto=await openWin(bossWin,'Chefes Diários');if(!aberto){st.textContent='Não consegui abrir Chefes Diários; o chefe fica para amanhã.';log(st.textContent,'warn');return}const W=()=>bossWin()||aberto.w,rank=String(cfg.bossRank||'E').toUpperCase();let tab=[...W().querySelectorAll('[role="tab"]')].find(t=>norm(t.textContent).startsWith(rank.toLowerCase()+' '));if(!tab){st.textContent=`Rank ${rank} não apareceu; o chefe fica para amanhã.`;log(st.textContent,'warn');return}
     if(estadoDoChefe(norm(tab.textContent),true)==='feito'){save(BOSS_DAY,diaBrasilia());st.textContent=`Chefe Rank ${rank} já estava feito hoje; fechei a janela.`;log(st.textContent);return}
     if(estadoDoChefe(norm(tab.textContent),true)==='bloqueado'){st.textContent=`Chefe Rank ${rank}: ${tab.textContent.replace(/\s+/g,' ').trim()}.`;return}
     if(tab.getAttribute('aria-selected')!=='true'){tab.click();await sleep(350)}
     const b=[...W().querySelectorAll('button')].find(x=>visible(x)&&norm(x.textContent)==='enfrentar'&&!x.disabled);
     if(estadoDoChefe(norm(tab.textContent),!!b)==='feito'){save(BOSS_DAY,diaBrasilia());st.textContent=`Chefe Rank ${rank} sem tentativa hoje: dei por feito e fechei a janela.`;log(st.textContent);return}
-    if(!b){st.textContent=`Chefe Rank ${rank} sem tentativa disponível.`;return}b.click();await sleep(500);const c=[...document.querySelectorAll('[role="dialog"] button,.slModalActions button')].find(x=>visible(x)&&/^(enfrentar|confirmar|entrar)$/.test(norm(x.textContent))&&!unsafe(x));c?.click();entrou=true;save(BOSS_DAY,diaBrasilia());st.textContent=`Entrou no chefe diário Rank ${rank}.`;log(st.textContent)}catch(e){st.textContent=`Erro no chefe: ${e.message}`;log(st.textContent,'error')}finally{if(aberto)await fechar(bossWin);if(!entrou)await retomarCaca();cacaAnterior=null;soltar();challengeBusy=false}}
+    if(!b){st.textContent=`Chefe Rank ${rank} sem tentativa disponível; fica para amanhã.`;log(st.textContent,'warn');return}b.click();await sleep(500);const c=[...document.querySelectorAll('[role="dialog"] button,.slModalActions button')].find(x=>visible(x)&&/^(enfrentar|confirmar|entrar)$/.test(norm(x.textContent))&&!unsafe(x));c?.click();entrou=true;save(BOSS_DAY,diaBrasilia());st.textContent=`Entrou no chefe diário Rank ${rank}.`;log(st.textContent)}catch(e){st.textContent=`Erro no chefe: ${e.message}`;log(st.textContent,'error')}finally{if(aberto)await fechar(bossWin);if(!entrou)await retomarCaca();cacaAnterior=null;soltar();challengeBusy=false}}
   async function torre(force=false){
     if(!force&&!cfg.towerAuto)return;
-    if(challengeBusy||load(TOWER_DAY,'')===diaBrasilia())return;
+    if(challengeBusy)return;
+    if(!force&&load(TOWER_DAY,'')===diaBrasilia())return;
     challengeBusy=true;
     const soltar=await pedirVez('torre');if(!soltar){challengeBusy=false;return}
     const st=$('[data-tower-state]');
     let aberto=null,entrou=false;
+    // A mesma regra do chefe, e pelo mesmo motivo: o `prepararDesafio` sai da caçada antes de olhar
+    // para nada, e o dia so' era marcado ao entrar. Cada falha — janela que nao abre, poder a menos,
+    // nenhum andar disponivel — devolvia o laco de sair e voltar de minuto a minuto. A troca e' que
+    // falhar gasta a ida do dia, inclusive quando o poder ainda nao chega; o botao `Verificar Torre
+    // agora` repete-a a' mao.
+    if(!force)save(TOWER_DAY,diaBrasilia());
     try{
-      if(!await prepararDesafio('Torre Infinita')){st.textContent='Não consegui voltar à cidade.';return}
+      if(!await prepararDesafio('Torre Infinita')){st.textContent='Não consegui voltar à cidade; a Torre fica para amanhã.';log(st.textContent,'warn');return}
       aberto=await openWin(towerWin,'Torre Infinita');
-      if(!aberto){st.textContent='Não consegui abrir a Torre.';return}
+      if(!aberto){st.textContent='Não consegui abrir a Torre; fica para amanhã.';log(st.textContent,'warn');return}
       const W=()=>towerWin()||aberto.w,w=W(),txt=norm(w.textContent);
       const poder=num((txt.match(/seu poder\s*([\d.]+)/)||[])[1]);
       const rec=num((txt.match(/poder recomendado\s*([\d.]+)/)||[])[1]);
       const necessario=Math.ceil(rec*(1+Number(cfg.towerMargem||0)/100));
-      if(rec&&poder<necessario){st.textContent=`Torre aguardando: poder ${poder.toLocaleString('pt-BR')}, precisa ${necessario.toLocaleString('pt-BR')}.`;return}
+      if(rec&&poder<necessario){st.textContent=`Torre fica para amanhã: poder ${poder.toLocaleString('pt-BR')}, precisa ${necessario.toLocaleString('pt-BR')}.`;log(st.textContent,'warn');return}
       const boxes=[...w.querySelectorAll('input[type="checkbox"]')];
       const label=x=>norm(x.closest('label')?.textContent||x.parentElement?.textContent||x.ariaLabel);
       const auto=boxes.find(x=>/avancar automaticamente/.test(label(x)));
@@ -350,7 +369,7 @@
         if(opt&&sel.value!==opt.value){sel.value=opt.value;sel.dispatchEvent(new Event('change',{bubbles:true}));await sleep(200)}
       }
       const entrar=[...W().querySelectorAll('button')].find(x=>visible(x)&&/^entrar no andar/.test(norm(x.textContent))&&!x.disabled);
-      if(!entrar){st.textContent='Nenhum andar disponível agora.';return}
+      if(!entrar){st.textContent='Nenhum andar disponível; a Torre fica para amanhã.';log(st.textContent,'warn');return}
       entrar.click();
       await sleep(500);
       const c=[...document.querySelectorAll('[role="dialog"] button,.slModalActions button')].find(x=>visible(x)&&/^(entrar|confirmar)$/.test(norm(x.textContent))&&!unsafe(x));
