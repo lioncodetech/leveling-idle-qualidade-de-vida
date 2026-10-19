@@ -69,7 +69,10 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
   servidor aceitou. Só se clica **dentro de um modal** e nunca num cartão da loja, porque o
   `Comprar` do cartão dá pelo mesmo nome e clicá-lo outra vez comprava em dobro; e nenhum sim
   que fale de diamante, premium, cristais, pix ou R$ é clicado, nem no texto nem no rótulo
-  oculto do botão;
+  oculto do botão. No fim da ida a extensão volta à **mesma caçada** em que estava, como nos
+  desafios: antes a volta era a escada a escolher, e só com a escada ligada — ia para a caçada
+  que ela preferisse, não para aquela em que você estava, e com a escada desligada ficava na
+  cidade. A escada passou a ser só a rede para quem começou a compra já na cidade;
 - venda de equipamento ao Brok na ida ao NPC ou com a mochila cheia, até a raridade escolhida, nunca materiais nem peças travadas;
 - ao chegar ao NPC a extensão fala com ele pela **tecla E**, como o jogador faz, em vez de clicar:
   o jogo manda `interact` sem coordenada e quem atende é a proximidade, então não há ponto para
@@ -111,6 +114,13 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
   a trabalhar ou à espera — trocar de caçada um minuto depois dá no mesmo, mas abrir a lista de
   caçadas por cima da loja fecha a janela de quem está a comprar. No manual, quem manda é você;
 - monitor da party, diária, eventos, guerra de time e fadiga;
+- a mochila cheia e o limite de fadiga também voltam à caçada, mas não na hora: estas duas saem da
+  caçada e **ficam** — a mochila até ser esvaziada, a fadiga até o descanso, que no jogo só corre
+  offline. A extensão guarda onde estava e espera pela condição que a tirou de lá: a mochila abaixo
+  do limite, ou a fadiga abaixo do limite **com a pausa já levantada**. Voltar antes seria desfazer
+  o que a pausa foi fazer. Essa volta corre mesmo com tudo pausado — é a pausa que ela espera que
+  levante — e pede a vez na fila como qualquer outra automação; se você voltar à caçada sozinho, a
+  memória morre em vez de o arrastar mais tarde. É memória da sessão: recarregar a página perde-a;
 - pausa geral, registro das ações e bloqueio de botões premium;
 - exportação e importação das configurações em arquivo, para levar a outra janela; entre classes diferentes, a build de status e os pesos do equipamento não vêm.
 
