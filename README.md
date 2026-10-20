@@ -24,7 +24,15 @@ o resgate pelo dia de Brasília para não reabrir a janela até a próxima virad
   duas idas encavalitadas não devolvem o cenário a meio da primeira.
 - distribuição automática dos pontos de status: escolha uma das 3 builds da classe que o jogo oferece ou monte a sua com um peso para cada atributo; sempre que houver pontos livres, a extensão abre a janela de Status, distribui, confirma e fecha a janela;
 - aba Equipamento: equipar os melhores pelo poder (botão "Equipar melhores" do jogo) ou pelos seus atributos preferidos, com peso e "exigir" para cada atributo das peças, a cada N minutos, uma vez por dia num horário ou uma vez por semana num dia e horário, e opcionalmente ao subir de nível;
-- build de talentos: uma lista em ordem de talentos e o nível de cada um; sempre que houver pontos de talento, a extensão abre a árvore, aprende na ordem e fecha a janela, pulando o que ainda estiver bloqueado;
+- build de talentos: uma lista em ordem de talentos e o nível de cada um; sempre que houver pontos de talento, a extensão abre a árvore, aprende na ordem e fecha a janela, pulando o que ainda estiver bloqueado.
+  Essa verificação aceita **faixas de horário**, quantas você quiser: em cada faixa a extensão
+  sorteia uma hora, uma vez por dia, e só confere nessa hora — por exemplo uma faixa das 10h às 11h
+  e outra das 15h às 16h. Sem faixa nenhuma, nada muda: continua a conferir sempre que houver
+  pontos novos. As faixas existem porque o saldo de pontos que a build não cobre (talento no
+  máximo, pré-requisito que falta, árvore que acabou) fica parado no jogo, e com ele a extensão
+  reabria a árvore de 20 em 20 segundos para não fazer nada. É a mesma máquina das faixas das
+  missões, com chaves próprias: as duas listas não partilham a hora sorteada nem a marca de
+  "já foi hoje";
 - escada de caçadas por marco de nível, lendo todas as páginas e dificuldades da lista, mantendo a caça atual sem opção segura;
 - modo Codex separado por Monstros, Loots, Equipamentos e Aprimoramento, priorizando o próximo marco incompleto;
 - aceita missões disponíveis e resgata automaticamente as recompensas concluídas, sem abandonar ou trocar missões;
